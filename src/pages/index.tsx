@@ -87,7 +87,9 @@ export default function Home() {
     });
 
     //let fileData = await (await fetch('/api/connect', {method: "POST", headers: {user: user, addr: addr}})).json();
-    let fileMetadataResponse = await (await fetch("http://moody.mx:3050/api/files", {headers: {'Content-Type': 'application/json'}})).json();
+    //let fileMetadataResponse = await (await fetch("http://moody.mx:3050/api/files", {headers: {'Content-Type': 'application/json'}})).json();
+    let fileMetadataResponse = await fetch("/api/test_files");
+    let json = await fileMetadataResponse.json();
     /*if (fileData.message == "Connected") {
       setConn({
         status: true,
@@ -102,10 +104,13 @@ export default function Home() {
       });
       setFileMetadata(null);
     }*/
-    setConn({
-      status: true,
-      message: "Connected"
-    });
+    if (fileMetadataResponse.status == 200) {
+      setConn({
+        status: true,
+        message: "Connected"
+      });
+      setFileMetadata(json.data);
+    }
 
   }
 
@@ -123,7 +128,6 @@ export default function Home() {
   }
 
   useEffect(() => {
-    console.log(fileMetadata);
     setVisibleFileMetadata(fileMetadata);
   }, [fileMetadata])
 
