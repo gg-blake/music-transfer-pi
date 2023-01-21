@@ -1,8 +1,8 @@
 import { useEffect, useState, use } from "react";
 
 import axios from '../axios';
-
 function FileCard({file}: {file: any}) {
+
   return (
     <div className="border-primary border-[1px] h-full w-full b-test flex flex-row justify-between p-[20px] bg-gradient-to-b from-dark to-transparent backdrop-blur-lg">
       <div className="w-auto h-full flex flex-col justify-between">
@@ -88,8 +88,8 @@ export default function Home() {
 
     //let fileData = await (await fetch('/api/connect', {method: "POST", headers: {user: user, addr: addr}})).json();
     //let fileMetadataResponse = await (await fetch("http://moody.mx:3050/api/files", {headers: {'Content-Type': 'application/json'}})).json();
-    let fileMetadataResponse = await fetch("/api/test_files");
-    let json = await fileMetadataResponse.json();
+    let response = await fetch("/api/files");
+    let mdata = await response.json();
     /*if (fileData.message == "Connected") {
       setConn({
         status: true,
@@ -104,12 +104,13 @@ export default function Home() {
       });
       setFileMetadata(null);
     }*/
-    if (fileMetadataResponse.status == 200) {
+    console.log(response);
+    if (response.status == 200) {
       setConn({
         status: true,
         message: "Connected"
       });
-      setFileMetadata(json.data);
+      setFileMetadata(mdata.data);
     }
 
   }
