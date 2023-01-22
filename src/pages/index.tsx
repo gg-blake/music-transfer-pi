@@ -1,26 +1,28 @@
 import { useEffect, useState, use } from "react";
 
+
 import axios from '../axios';
 function FileCard({file}: {file: any}) {
 
+
   return (
-    <div className="border-primary border-[1px] h-full w-full b-test flex flex-row justify-between p-[20px] bg-gradient-to-b from-dark to-transparent backdrop-blur-lg">
+    <div className="border-primary border-[1px] h-full w-full justify-items-stretch grid grid-cols-2 grid-rows-2 p-[20px] bg-gradient-to-b from-dark to-transparent backdrop-blur-lg">
       <div className="w-auto h-full flex flex-col justify-between">
         
         <div className="flex flex-col gap-[5px]">
           <div className="w-auto h-auto flex flex-row flex-wrap gap-3 text-neon-pink text-[12px] font-semibold pl-1 mb-[5px]">
             <span className="w-auto h-auto  border-[1px] flex justify-center items-center border-neon-pink bg-neon-pink bg-opacity-20 px-1">{file != undefined ? file.format.format_name.toUpperCase() : "n/a"}</span>
-            <span className="w-auto h-auto  border-[1px] flex justify-center items-center border-neon-pink bg-neon-pink bg-opacity-20 px-1">{file != undefined ? (file.format.tags.GENRE || file.format.tags.Genre).toUpperCase() : "n/a"}</span>
-            <span className="w-auto h-auto  border-[1px] flex justify-center items-center border-neon-pink bg-neon-pink bg-opacity-20 px-1">{file != undefined ? file.format.tags.DATE || file.format.tags.Date : "n/a"}</span>
+            <span className="w-auto h-auto  border-[1px] flex justify-center items-center border-neon-pink bg-neon-pink bg-opacity-20 px-1">{file != undefined ? (file.format.tags.GENRE || file.format.tags.Genre || file.format.tags.genre).toUpperCase() : "n/a"}</span>
+            <span className="w-auto h-auto  border-[1px] flex justify-center items-center border-neon-pink bg-neon-pink bg-opacity-20 px-1">{file != undefined ? file.format.tags.DATE || file.format.tags.Date || file.format.tags.date : "n/a"}</span>
             <span className="w-auto h-auto  border-[1px] flex justify-center items-center border-neon-pink bg-neon-pink bg-opacity-20 px-1">{file != undefined ? Math.trunc(file.format.size / 8000) + "KB" : "n/a"}</span>
             
           </div>
-          <h1 className="text-[32px] font-extralight">{file != undefined ? (file.format.tags.TITLE || file.format.tags.Title) : "n/a"}</h1>
-          <h2 className="text-[18px] font-extralight pl-[2px]">{file != undefined ? file.format.tags.ARTIST || file.format.tags.Artist : "n/a"}</h2>
+          <h1 className="text-[32px] font-extralight">{file != undefined ? (file.format.tags.TITLE || file.format.tags.Title || file.format.tags.title) : "n/a"}</h1>
+          <h2 className="text-[18px] font-extralight pl-[2px]">{file != undefined ? file.format.tags.ARTIST || file.format.tags.Artist || file.format.tags.artist : "n/a"}</h2>
         </div>
       </div>
-      <div className="w-[200px] h-[200px] bg-primary rounded-md opacity-10">
-        
+      <div className="justify-self-end w-auto h-[70%] bg-primary rounded-md opacity-50">
+        <img className="h-full w-auto" src={`/api/images/${file.format.tags != undefined ? (file.format.tags.ALBUM || file.format.tags.Album || file.format.tags.album).toLowerCase() : ''}/cover.jpg`} alt="rofl" />
       </div>
     </div>
   )
@@ -45,10 +47,10 @@ function SearchResult({file, id, onFocusState, onHoverState}: {file: any, id: nu
         <div className="w-8 text-center">{file.format.tags != undefined ? parseInt(file.format.tags.track || file.format.tags.TRACK || file.format.tags.Track) : "n/a"}</div>
         <div className="w-full flex-shrink flex-grow grid grid-cols-4 items-center">
           <div className="flex flex-col gap-0 justify-center">
-            <span className="truncate text-[16px] font-normal leading-3 pt-[6px]">{file.format.tags != undefined ? file.format.tags.TITLE || file.format.tags.Title : "n/a"}</span>
-            <span className="truncate font-light">{file.format.tags != undefined ? file.format.tags.ARTIST || file.format.tags.Artist : 'n/a'}</span>
+            <span className="truncate text-[16px] font-normal leading-3 pt-[6px]">{file.format.tags != undefined ? file.format.tags.TITLE || file.format.tags.Title || file.format.tags.title : "n/a"}</span>
+            <span className="truncate font-light">{file.format.tags != undefined ? file.format.tags.ARTIST || file.format.tags.Artist || file.format.tags.artist : 'n/a'}</span>
           </div>
-          <div className="truncate text-right">{file.format.tags != undefined ? file.format.tags.ALBUM || file.format.tags.Album : 'n/a'}</div>
+          <div className="truncate text-right">{file.format.tags != undefined ? file.format.tags.ALBUM || file.format.tags.Album || file.format.tags.album : 'n/a'}</div>
           <div className="truncate text-right">{`${Math.trunc(date.getMonth())}/${date.getDate()}/${date.getFullYear()}` || 'n/a'}</div>
           <div className="truncate text-right pr-2">{`${Math.trunc(file.format.duration / 60)}:${('0' + Math.trunc(file.format.duration % 60)).slice(-2)}` || 'n/a'}</div>
         </div>
@@ -146,10 +148,10 @@ export default function Home() {
             color: isConn.message == "Not connected" ? "#5B5B5B" : isConn.message == "Connecting" ? "#FABE4D" : isConn.message == "Connected" ? "#6ded66" : "#ED5142"
           }} className="text-[12px] opacity-10">{isConn.message}</span>
       </div>
-      <div className={`leading-relaxed p-0 w-full overflow-x-clip text-neon-pink py-[2px] z-10 h-auto flex flex-row-reverse ${isConn.status ? 'text-[64px]' : 'text-[128px]'} gap-2`}>
-        <input id="addr" type="text" className="w-full h-auto  bg-transparent focus:outline-none focus:bg-neon-pink rounded-md focus:bg-opacity-10 leading-none transition-all hover:animate-pulse focus:animate-none peer" name="address" placeholder="address" value={addr} onChange={updateAddr} />
-        @
-        <input id="user" type="text" className={`z-0 ${isConn.status ? "w-full text-right" : "w-full text-left"} focus:w-full px-2 translate-x-[5px] h-auto text-primary bg-transparent focus:caret-primary focus:bg-primary peer peer-focus:w-1/4 peer-focus:truncate focus:bg-opacity-10 rounded-md focus:outline-none leading-none transition-all hover:animate-pulse focus:animate-none peer`} name="user" placeholder="user" value={user} onChange={updateUser} />
+      <div className={`leading-relaxed p-0 w-full text-neon-pink py-[2px] mt-4 xl:mt-0 z-10 h-auto flex flex-col-reverse justify-center xl:justify-start xl:flex-row-reverse ${isConn.status ? 'text-[28px] xl:text-[64px]' : 'text-[128px]'} gap-6 xl:gap-2`}>
+        <input id="addr" type="text" className="w-full h-auto p-2 xl:p-0 xl:bg-transparent focus:outline-none bg-neon-pink xl:focus:bg-neon-pink rounded-md bg-opacity-20 xl:focus:bg-opacity-10 leading-none transition-all xl:hover:animate-pulse focus:animate-none peer" name="address" placeholder="address" value={addr} onChange={updateAddr} />
+        <span className="hidden xl:visible">@</span>
+        <input id="user" type="text" className={`z-0 ${isConn.status ? "xl:w-full xl:p-2 xl:p-0 xl:text-right" : "w-full text-left"} focus:w-full p-2 xl:p-0 xl:px-2 h-auto text-primary xl:bg-transparent bg-primary bg-opacity-20 focus:caret-primary focus:bg-primary peer xl:peer-focus:w-1/4 xl:peer-focus:truncate focus:bg-opacity-10 rounded-md focus:outline-none leading-none transition-all xl:hover:animate-pulse focus:animate-none peer`} name="user" placeholder="user" value={user} onChange={updateUser} />
       </div>
       <div className={`w-full h-auto flex flex-row gap-4 ${isConn.status ? "justify-center" : "justify-start"}`}>
         <span onClick={() => connect()} className={`z-10 w-auto ${isConn.status ? 'text-[32px]' : 'text-[64px]'} h-auto self-start stroke-primary hover:bg-neon-pink hover:stroke-neon-pink hover:bg-opacity-10 group select-none transition-colors flex justify-center items-center font-light px-4 py-[18px] rounded-md`}>
@@ -176,8 +178,8 @@ export default function Home() {
           </svg>
         </span>
       </div>
-      <div className={`${isConn.status ? "visible" : "hidden"} w-full h-3/5 flex flex-row mt-8 ml-[2px] gap-0`}>
-        <div className="flex flex-grow flex-col transition-all">
+      <div className={`${isConn.status ? "visible" : "hidden"} w-full h-3/5 grid grid-cols-8 grid-rows-1 flex-row mt-8 ml-[2px] gap-0`}>
+        <div className={`flex flex-grow flex-col transition-all ${focusIndex >= 0 ? 'col-span-5' : 'col-span-full'}`}>
           <div className="sticky z-20 top-0 flex flex-col gap-2">
             <div className="w-full h-auto flex">
               <input id="search" className="w-full text-[14px] hover:outline-neon-pink hover:animate-pulse focus:animate-none active:animate-none transition-all placeholder:italic focus:placeholder:non-italic outline-none outline-1 outline-primary focus:outline-neon-pink bg-transparent py-1.5 px-4 text-primary placeholder-primary placeholder-opacity-25 focus:placeholder-opacity-70" name="search" placeholder="Enter a file name" onChange={search} />
@@ -201,7 +203,7 @@ export default function Home() {
             <div className={`w-auto h-auto text-primary sticky bottom-0 whitespace-nowrap truncate px-1 py-[2px] bg-gradient-to-t from-dark  to-transparent backdrop-blur-sm z-20 ${visibleFileMetadata[hoverIndex]?.format.filename != undefined ? "text-[10px]" : "text-2xl opacity-50 flex justify-center"}`}>{visibleFileMetadata[hoverIndex]?.format.filename != undefined ? "/" + visibleFileMetadata[hoverIndex]?.format.filename.split('/').slice(3).join("/") : "No results found :/"}</div>
           </div>
         </div>
-        <div className={`${focusIndex >= 0 ? 'w-full flex-grow' : 'flex-shrink'} h-full transition-all translate-y-[-3px] text-primary`}>
+        <div className={`${focusIndex >= 0 ? 'col-span-3' : 'col-span-0'} h-full transition-all translate-y-[-3px] text-primary`}>
           {focusIndex >= 0 ? <FileCard file={visibleFileMetadata[focusIndex]} /> : null}
         </div>
       </div>
